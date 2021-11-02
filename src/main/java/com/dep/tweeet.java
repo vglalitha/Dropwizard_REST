@@ -15,7 +15,6 @@ public class tweeet extends Application<BRSConfiguration> {
     @Override
     public void run(BRSConfiguration brsConfiguration,
                     Environment environment) throws Exception {
-        System.out.println("hlo");
         environment.jersey().register(new DropResource());
 
     }

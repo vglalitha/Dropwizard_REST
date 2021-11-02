@@ -14,9 +14,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Produces(MediaType.APPLICATION_JSON)
 @Path("/api/1.0/twitter")
 public class DropResource {
 
@@ -31,43 +33,33 @@ public class DropResource {
 
     @POST
     @Path("/tweetAgain")
-    public Response tweetAgain(String post) throws TwitterException {
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-                .setOAuthConsumerKey("0y5BEWvSstdsSzL1Sf73BKjIm")
-                .setOAuthConsumerSecret("nJ8D5SNDYbUUdyk3lQipGyZiVrvcob6KO4fHT3yANYNJscnee4")
-                .setOAuthAccessToken("1450743367696994308-dBUe5yjC4RsjyVt8cjht2Cmk0V9iS2")
-                .setOAuthAccessTokenSecret("NCJQOsxtxl3ynLmwBn9V7kGeUZ8e0aYADAFJWR6DFxR5q");
-        TwitterFactory tf = new TwitterFactory(cb.build());
-        Twitter twitter = tf.getInstance();
-
-
-        String ret=null;
+    public Response tweetAgain(Request request) throws TwitterException {
+        Twitter twitter = TwitterFactory.getSingleton();
+        String post= request.getMessage();
         if(StringUtil.isEmpty(post)) {
             return Response.status(400,"Please enter valid tweet").build();
         }
-        else{
-            twitter.updateStatus(post);
-            return Response.status(200,"successfully tweeted").build();
+        else {
+            try {
+                twitter.updateStatus(post);
+                return Response.status(500, "internal server error").build();
+            }
+            catch (TwitterException e) {
+                return Response.status(200,"Request is successful").build();
+            }
         }
 
     }
 
     @GET
-    @Path("/tweet")
-    public String time () throws TwitterException {
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-                .setOAuthConsumerKey("0y5BEWvSstdsSzL1Sf73BKjIm")
-                .setOAuthConsumerSecret("nJ8D5SNDYbUUdyk3lQipGyZiVrvcob6KO4fHT3yANYNJscnee4")
-                .setOAuthAccessToken("1450743367696994308-dBUe5yjC4RsjyVt8cjht2Cmk0V9iS2")
-                .setOAuthAccessTokenSecret("NCJQOsxtxl3ynLmwBn9V7kGeUZ8e0aYADAFJWR6DFxR5q");
-        TwitterFactory tf = new TwitterFactory(cb.build());
-        Twitter twitter = tf.getInstance();
+    @Path("/getTweets")
+    public static ArrayList<String> Gettweets () throws TwitterException {
+        Twitter twitter = TwitterFactory.getSingleton();
+        ArrayList<String> arrayList = new ArrayList<String>();
         List<Status> status = twitter.getHomeTimeline();
         for (Status st : status) {
-            System.out.println(st.getUser().getName() + "-------" + st.getText());
+            arrayList.add(st.getText());
         }
-        return "recieved timeline";
+        return arrayList;
     }
 }
