@@ -32,6 +32,7 @@ public class Controller {
         return arrayList;
     }
 
+
     @GET
     @Path("/healthCheck")
     public String healthCheck() {
@@ -47,11 +48,11 @@ public class Controller {
         if (StringUtil.isEmpty(post)) {
             return Response.status(400, "Please enter valid tweet").build();
         } else {
-            try {
-                twitter.updateStatus(post);
-                return Response.status(500, "internal server error").build();
-            } catch (TwitterException e) {
-                return Response.status(200, "Request is successful").build();
+                Status status =twitter.updateStatus(post);
+                if(status.getText().equals(post)){
+                    return Response.status(200, "Request is successful").build();
+            } else{
+                    return Response.status(500, "internal server error").build();
             }
         }
 
