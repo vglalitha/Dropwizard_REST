@@ -32,12 +32,6 @@ public class Controller {
         return arrayList;
     }
 
-    @GET
-    @Path("/healthCheck")
-    public String healthCheck() {
-
-        return "Rececived ping " + new Date();
-    }
 
     @POST
     @Path("/tweetAgain")
