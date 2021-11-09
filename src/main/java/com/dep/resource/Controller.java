@@ -36,7 +36,7 @@ public class Controller {
     @Path("/healthCheck")
     public String healthCheck() {
 
-        return "Ping Received at " + new Date();
+        return "Rececived ping " + new Date();
     }
 
     @POST
