@@ -40,11 +40,19 @@ public class Controller {
         if (StringUtil.isEmpty(post)) {
             return Response.status(400, "Please enter valid tweet").build();
         } else {
+<<<<<<< HEAD
                 Status status =twitter.updateStatus(post);
                 if(status.getText().equals(post)){
                     return Response.status(200, "Request is successful").build();
             } else{
                     return Response.status(500, "internal server error").build();
+=======
+            try {
+                twitter.updateStatus(post);
+                return Response.status(500, "There is internal server error").build();
+            } catch (TwitterException e) {
+                return Response.status(200, "Request is successful").build();
+>>>>>>> b26a6ba (message changed)
             }
         }
 
